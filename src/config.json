@@ -1,0 +1,9 @@
+{
+  "token": "",
+  "cosmos": {
+    "cosmosEndpoint": "",
+    "cosmosKey": "",
+    "cosmosDatabase": "",
+    "cosmosContainer": ""
+  }
+}

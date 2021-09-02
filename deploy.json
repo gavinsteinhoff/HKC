@@ -1,0 +1,6 @@
+{
+    "apps": {
+        "name": "hkc",
+        "script": "npm start --prefix /root/discord_bots/hkc"
+    }
+}
