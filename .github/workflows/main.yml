@@ -38,6 +38,14 @@ jobs:
       - name: File Stuff
         run: cp ./src/config.json ./src/config.local.json
       
+      - name: Start App
+        uses: garygrossgarten/github-action-ssh@release
+        with:
+          command: mkdir -p /root/discord_bots/hkc
+          host: ${{ secrets.SFTP_HOST }}
+          username: root
+          password: ${{ secrets.SFTP_KEY }}
+
       - name: SFTP uploader
         uses: wangyucode/sftp-upload-action@24f8bb83383dc39bed201ee5da01475e6c38c568
         with:
