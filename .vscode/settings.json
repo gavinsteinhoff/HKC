@@ -1,5 +1,8 @@
 {
-  "cSpell.words": ["Subcommand"],
+  "cSpell.words": [
+    "logchannel",
+    "Subcommand"
+  ],
   "debug.javascript.terminalOptions": {
     "skipFiles": [
       "<node_internals>/**",

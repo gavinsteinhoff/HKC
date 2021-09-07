@@ -1,4 +1,4 @@
-import { Client, DMChannel } from 'discord.js'
+import { Client, DMChannel, User } from 'discord.js'
 
 export const myLib = {
   async getDmChannel (userId: string, client: Client): Promise<DMChannel> {
@@ -8,5 +8,8 @@ export const myLib = {
       dmChannel = await user.createDM()
     }
     return dmChannel
+  },
+  getMentionUserString (user: User): string {
+    return `<@${user.id}>`
   }
 }

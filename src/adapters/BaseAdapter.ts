@@ -1,47 +1,29 @@
-import { Container, CosmosClient, Database, FeedOptions, SqlQuerySpec } from '@azure/cosmos'
+import { CosmosClient, FeedOptions, SqlQuerySpec } from '@azure/cosmos'
 import { CustomError } from '../models/CustomErrors'
 import IDatabaseObject from '../models/DatabaseObject'
-import { CosmosSettings } from '../models/Settings'
+import { cosmos } from '../config.local.json'
 
-const cosmosInfo: CosmosSettings = new CosmosSettings()
-let database: Database
-let container: Container
-if (process.env.NODE_ENV === 'prod') {
-  import('../config.json').then(config => {
-    cosmosInfo.cosmosContainer = config.cosmos.cosmosContainer
-    cosmosInfo.cosmosDatabase = config.cosmos.cosmosDatabase
-    cosmosInfo.cosmosEndpoint = config.cosmos.cosmosEndpoint
-    cosmosInfo.cosmosKey = config.cosmos.cosmosKey
-  })
-} else {
-  import('../config.local.json').then(config => {
-    cosmosInfo.cosmosContainer = config.cosmos.cosmosContainer
-    cosmosInfo.cosmosDatabase = config.cosmos.cosmosDatabase
-    cosmosInfo.cosmosEndpoint = config.cosmos.cosmosEndpoint
-    cosmosInfo.cosmosKey = config.cosmos.cosmosKey
-    const cosmosClient = new CosmosClient({
-      endpoint: cosmosInfo.cosmosEndpoint,
-      key: cosmosInfo.cosmosKey
-    })
-    database = cosmosClient.database(cosmosInfo.cosmosDatabase)
-    container = database.container(cosmosInfo.cosmosContainer)
-  })
-}
+const cosmosClient = new CosmosClient({
+  endpoint: cosmos.cosmosEndpoint,
+  key: cosmos.cosmosKey
+})
+const database = cosmosClient.database(cosmos.cosmosDatabase)
+const container = database.container(cosmos.cosmosContainer)
 
 export const BaseAdapter = {
-  async Save<IDatabaseObject> (item: IDatabaseObject): Promise<any> {
+  async Save (item: IDatabaseObject): Promise<any> {
     const { resource: createdItem } = await container.items.create(item)
     return createdItem
-  },
-  async Delete (item: IDatabaseObject): Promise<boolean> {
-    await container.item(item.id!, item.kind).delete()
-    return true
   },
   async Update (item: IDatabaseObject | any): Promise<IDatabaseObject> {
     const { resource: updatedItem } = await container
       .item(item.id, item.kind)
       .replace(item as any)
     return updatedItem
+  },
+  async Delete (item: IDatabaseObject): Promise<boolean> {
+    await container.item(item.id!, item.kind).delete()
+    return true
   },
   async Get (id: string, partitionKey: string): Promise<IDatabaseObject> {
     try {
