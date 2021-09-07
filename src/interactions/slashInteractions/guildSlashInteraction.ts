@@ -60,43 +60,42 @@ const guildInteraction: SlashInteractionHandler = {
     const subCommand = interaction.options.getSubcommand(false)
     const subCommandGroup = interaction.options.getSubcommandGroup(false)
 
-    switch (subCommandGroup) {
-      case 'update': {
-        switch (subCommand) {
-          case 'timezone': {
-            const timezone = interaction.options.getString('timezone', true)
-            const guild = await CustomGuild.Get(interaction.guildId)
-            guild.timezone = timezone
-            await guild.Update()
-            interaction.editReply('Updated Guild!')
-            break
+    if (subCommandGroup) {
+      switch (subCommandGroup) {
+        case 'update': {
+          switch (subCommand) {
+            case 'timezone': {
+              const timezone = interaction.options.getString('timezone', true)
+              const guild = await CustomGuild.Get(interaction.guildId)
+              guild.timezone = timezone
+              await guild.Update()
+              interaction.editReply('Updated Guild!')
+              break
+            }
+            case 'logchannel': {
+              const channel = interaction.options.getChannel('channel', true)
+              const guild = await CustomGuild.Get(interaction.guildId)
+              guild.modLogChannel = channel.id
+              await guild.Update()
+              interaction.editReply(`Updated mod log channel to ${channel.name}!`)
+              break
+            }
           }
-          case 'logchannel': {
-            const channel = interaction.options.getChannel('channel', true)
-            const guild = await CustomGuild.Get(interaction.guildId)
-            guild.modLogChannel = channel.id
-            await guild.Update()
-            interaction.editReply(`Updated mod log channel to ${channel.name}!`)
-            break
-          }
+          break
         }
-        break
       }
-      case undefined: {
-        switch (subCommand) {
-          case 'add': {
-            const guild = new CustomGuild(interaction.guildId)
-            const timezone = interaction.options.getString('timezone', true)
-            guild.timezone = timezone
-            await guild.Save()
-            interaction.editReply('Linked Guild!')
-            break
-          }
+    } else {
+      switch (subCommand) {
+        case 'add': {
+          const guild = new CustomGuild(interaction.guildId)
+          const timezone = interaction.options.getString('timezone', true)
+          guild.timezone = timezone
+          await guild.Save()
+          interaction.editReply('Linked Guild!')
+          break
         }
-        break
       }
     }
   }
 }
-
 export = guildInteraction

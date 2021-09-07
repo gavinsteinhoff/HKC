@@ -9,6 +9,7 @@ export default class CustomGuild implements IDatabaseObject {
     id: string | undefined
     kind: string = 'guild'
     modLogChannel: string | undefined
+    feedbackBanned: string[] = []
     members: CustomUser[] = []
     private _timezone: string | undefined = 'America/New_York'
     public get timezone (): string | undefined {
@@ -32,6 +33,7 @@ export default class CustomGuild implements IDatabaseObject {
       const guild = new CustomGuild(databaseItem.id)
       guild.modLogChannel = databaseItem.modLogChannel
       guild.timezone = databaseItem.timezone
+      guild.feedbackBanned = databaseItem.feedbackBanned
       return guild
     }
 

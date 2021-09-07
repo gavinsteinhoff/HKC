@@ -24,12 +24,23 @@ const builder = new SlashCommandBuilder()
   )
   .addSubcommand((subCommand: SlashCommandSubcommandBuilder) =>
     subCommand
-      .setName('ban')
+      .setName('block')
       .setDescription('Restricts a user who is abusing the feedback.')
       .addUserOption((option: SlashCommandUserOption) =>
         option
-          .setName('channel')
-          .setDescription('The channel you want mod logs sent to')
+          .setName('user')
+          .setDescription('The user you want to ban from feedback.')
+          .setRequired(true)
+      )
+  )
+  .addSubcommand((subCommand: SlashCommandSubcommandBuilder) =>
+    subCommand
+      .setName('unblock')
+      .setDescription('Unblocks a user form using feedback.')
+      .addUserOption((option: SlashCommandUserOption) =>
+        option
+          .setName('user')
+          .setDescription('The user you want to unblock from feedback.')
           .setRequired(true)
       )
   )
@@ -51,17 +62,14 @@ const guildInteraction: SlashInteractionHandler = {
     switch (subCommand) {
       case 'submit': {
         const feedback = interaction.options.getString('feedback', true)
-
         const guildId = interaction.guildId
-
         const guild = await CustomGuild.Get(guildId)
-
+        if (guild.feedbackBanned.includes(interaction.user.id)) {
+          throw new CustomError('Sorry, you have been blocked from sending feedback.')
+        }
         if (!guild.modLogChannel) throw new CustomError('Feedback Module is not setup.')
-
         const channel = await interaction.client.channels.fetch(guild.modLogChannel)
-
         if (!channel || !channel.isText) { throw new CustomError('Feedback Module is not setup.') }
-
         await (channel as TextChannel).send(
           {
             embeds: [
@@ -77,10 +85,31 @@ const guildInteraction: SlashInteractionHandler = {
         await interaction.editReply('Feedback Send!')
         break
       }
-      case 'ban': {
+      case 'block': {
         const permission = (await interaction.guild?.members.fetch(interaction.user.id))?.permissions.has(Permissions.FLAGS.MANAGE_GUILD, true)
         if (!permission) throw new CustomError('You do not have access to do that')
-
+        const user = interaction.options.getUser('user', true)
+        const guildId = interaction.guildId
+        const guild = await CustomGuild.Get(guildId)
+        guild.feedbackBanned.push(user.id)
+        await guild.Update()
+        await interaction.editReply('User blocked!')
+        break
+      }
+      case 'unblock': {
+        const permission = (await interaction.guild?.members.fetch(interaction.user.id))?.permissions.has(Permissions.FLAGS.MANAGE_GUILD, true)
+        if (!permission) throw new CustomError('You do not have access to do that')
+        const user = interaction.options.getUser('user', true)
+        const guildId = interaction.guildId
+        const guild = await CustomGuild.Get(guildId)
+        const foundId = guild.feedbackBanned.find(u => u === user.id)
+        if (foundId) {
+          guild.feedbackBanned.splice(guild.feedbackBanned.indexOf(foundId), 1)
+          await guild.Update()
+          await interaction.editReply('User unblocked!')
+        } else {
+          await interaction.editReply('User not blocked!')
+        }
         break
       }
     }

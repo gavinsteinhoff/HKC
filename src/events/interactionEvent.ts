@@ -32,7 +32,6 @@ const interactionEvent = {
     try {
       await interaction.deferReply({ ephemeral: true })
       const interactionName = interaction.commandName
-
       if (interaction.isContextMenu()) {
         const user = interaction.user.id
         const command = contextInteractions.find(c => c.name === interactionName)

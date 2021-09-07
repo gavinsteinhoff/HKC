@@ -3,7 +3,7 @@ import { RESTPostAPIApplicationCommandsJSONBody, Routes } from 'discord-api-type
 import Discord from 'discord.js'
 import fs from 'fs'
 import path from 'path'
-import { token } from '../config.local.json'
+import { token, guildId, env } from '../config.local.json'
 
 export interface ButtonInteractionHandler {
   name: string;
@@ -59,8 +59,8 @@ export const InteractionHandler = {
         data.push(interaction.data)
       })
 
-      await rest.put(Routes.applicationGuildCommands(client.application!.id, '712007420070854667'), { body: data })
-      await rest.put(Routes.applicationCommands(client.application!.id), { body: data })
+      await rest.put(Routes.applicationGuildCommands(client.application!.id, guildId), { body: data })
+      if (env !== 'dev') { await rest.put(Routes.applicationCommands(client.application!.id), { body: [data] }) }
 
       console.log('Successfully reloaded application commands.')
     } catch (err) {
