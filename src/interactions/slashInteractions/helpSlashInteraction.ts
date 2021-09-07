@@ -60,7 +60,7 @@ const helpInteraction: SlashInteractionHandler = {
 export = helpInteraction
 
 const helpMessage = {
-  content: 'Thanks for inviting me, HKC! I am bot that mostly does moderation.',
+  content: 'Thanks for inviting me, HKC! I am a bot that mostly does moderation.',
   embeds: [
     new MessageEmbed()
       .setTitle('Admin Setup')
