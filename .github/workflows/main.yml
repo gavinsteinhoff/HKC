@@ -31,7 +31,7 @@ jobs:
         env:
           env: prod
           token: ${{ secrets.DISCORD_KEY }}
-          guildId: 712007420070854667
+          guildId: 123
           cosmos.cosmosEndpoint: ${{ secrets.COSMOS_ENDPOINT }}
           cosmos.cosmosKey: ${{ secrets.COSMOS_KEY }}
           cosmos.cosmosDatabase: ${{ secrets.COSMOS_DATABASE }}
