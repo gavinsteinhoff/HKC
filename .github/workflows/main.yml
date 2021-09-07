@@ -44,7 +44,7 @@ jobs:
           host: ${{ secrets.SFTP_HOST }}
           password: ${{ secrets.SFTP_KEY }}
           localDir: ./
-          remoteDir: /root/discord_bots/ge
+          remoteDir: /root/discord_bots/hkc
           
       - name: Start App
         uses: garygrossgarten/github-action-ssh@release
