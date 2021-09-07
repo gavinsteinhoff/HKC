@@ -36,7 +36,7 @@ jobs:
           cosmos.cosmosContainer: ${{ secrets.COSMOS_CONTAINER }}
           
       - name: File Stuff
-        run: cp config.json config.local.json
+        run: cp ./src/config.json ./src/config.local.json
       
       - name: SFTP uploader
         uses: wangyucode/sftp-upload-action@24f8bb83383dc39bed201ee5da01475e6c38c568
