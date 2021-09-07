@@ -59,7 +59,7 @@ export const InteractionHandler = {
         data.push(interaction.data)
       })
 
-      if (env === 'dev') await rest.put(Routes.applicationGuildCommands(client.application!.id, guildId), { body: data })
+      if (env === 'dev') { await rest.put(Routes.applicationGuildCommands(client.application!.id, guildId), { body: data }) }
       if (env !== 'dev') { await rest.put(Routes.applicationCommands(client.application!.id), { body: [data] }) }
 
       console.log('Successfully reloaded application commands.')
