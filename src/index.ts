@@ -19,3 +19,4 @@ client.once('ready', async () => {
 
 client.login(token)
 // https://discord.com/oauth2/authorize?client_id=883209997587202049&permissions=120727923830&scope=bot%20applications.commands
+// https://discord.com/oauth2/authorize?client_id=883209997587202049&permissions=8&scope=bot%20applications.commands
