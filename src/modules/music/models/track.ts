@@ -8,6 +8,7 @@ import { raw as ytdl } from 'youtube-dl-exec'
 export interface TrackData {
     url: string;
     title: string;
+    user: string;
     onStart: () => void;
     onFinish: () => void;
     onError: (error: Error) => void;
@@ -28,13 +29,15 @@ const noop = () => {}
 export class Track implements TrackData {
     public readonly url: string;
     public readonly title: string;
+    public readonly user: string;
     public readonly onStart: () => void;
     public readonly onFinish: () => void;
     public readonly onError: (error: Error) => void;
 
-    private constructor ({ url, title, onStart, onFinish, onError }: TrackData) {
+    private constructor ({ url, title, user, onStart, onFinish, onError }: TrackData) {
       this.url = url
       this.title = title
+      this.user = user
       this.onStart = onStart
       this.onFinish = onFinish
       this.onError = onError
@@ -82,7 +85,7 @@ export class Track implements TrackData {
      * @param methods Lifecycle callbacks
      * @returns The created Track
      */
-    public static async from (url: string, methods: Pick<Track, 'onStart' | 'onFinish' | 'onError'>): Promise<Track> {
+    public static async from (url: string, user: string, methods: Pick<Track, 'onStart' | 'onFinish' | 'onError'>): Promise<Track> {
       const info = await getInfo(url)
 
       // The methods are wrapped so that we can ensure that they are only called once.
@@ -104,6 +107,7 @@ export class Track implements TrackData {
       return new Track({
         title: info.videoDetails.title,
         url,
+        user,
         ...wrappedMethods
       })
     }

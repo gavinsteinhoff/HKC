@@ -43,7 +43,7 @@ jobs:
       - name: Start App
         uses: garygrossgarten/github-action-ssh@release
         with:
-          command: mkdir -p /root/discord_bots/hkc
+          command: mkdir -p /root/discord_bots/hkc-beta
           host: ${{ secrets.SFTP_HOST }}
           username: root
           password: ${{ secrets.SFTP_KEY }}

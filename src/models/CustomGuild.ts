@@ -1,4 +1,5 @@
 import { FeedOptions, SqlQuerySpec } from '@azure/cosmos'
+import { Snowflake } from 'discord-api-types'
 import { DateTime } from 'luxon'
 import { BaseAdapter } from '../adapters/BaseAdapter'
 import { CustomError } from './CustomErrors'
@@ -9,6 +10,7 @@ export default class CustomGuild implements IDatabaseObject {
     id: string | undefined
     kind: string = 'guild'
     modLogChannel: string | undefined
+    musicChannel: Snowflake | undefined
     feedbackBanned: string[] = []
     members: CustomUser[] = []
     private _timezone: string | undefined = 'America/New_York'
@@ -32,6 +34,7 @@ export default class CustomGuild implements IDatabaseObject {
     static FromDatabase (databaseItem: any): CustomGuild {
       const guild = new CustomGuild(databaseItem.id)
       guild.modLogChannel = databaseItem.modLogChannel
+      guild.musicChannel = databaseItem.musicChannel
       guild.timezone = databaseItem.timezone
       guild.feedbackBanned = databaseItem.feedbackBanned
       return guild
