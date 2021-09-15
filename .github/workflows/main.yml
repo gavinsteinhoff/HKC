@@ -34,7 +34,7 @@ jobs:
       - name: File Stuff
         run: cp ./src/config.json ./src/config.local.json
       
-      - name: Start App
+      - name: Create Folder
         uses: garygrossgarten/github-action-ssh@release
         with:
           command: mkdir -p /root/discord_bots/hkc
