@@ -45,7 +45,7 @@ builder.addSubcommandGroup((command: SlashCommandSubcommandGroupBuilder) =>
 const guildInteraction: SlashInteractionHandler = {
   name: 'guild',
   time: -1,
-  data: builder.toJSON(),
+  data: [],
 
   startup (localClient: Discord.Client) {
     client = localClient

@@ -48,7 +48,7 @@ const builder = new SlashCommandBuilder()
 const guildInteraction: SlashInteractionHandler = {
   name: 'feedback',
   time: 30,
-  data: builder.toJSON(),
+  data: [],
 
   startup (localClient: Discord.Client) {
     client = localClient

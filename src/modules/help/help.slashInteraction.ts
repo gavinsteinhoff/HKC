@@ -27,8 +27,29 @@ builder
 const helpInteraction: SlashInteractionHandler = {
   name: 'help',
   time: -1,
-  data: builder.toJSON(),
-
+  data: [
+    {
+      name: 'help',
+      description: 'Provides Help',
+      options: [
+        {
+          name: 'ping',
+          description: 'Provides ping',
+          type: 'SUB_COMMAND'
+        },
+        {
+          name: 'info',
+          description: 'Sends bot info to you.',
+          type: 'SUB_COMMAND'
+        },
+        {
+          name: 'post',
+          description: 'Post bot info to the chat.',
+          type: 'SUB_COMMAND'
+        }
+      ]
+    }
+  ],
   startup (localClient: Discord.Client) {
   },
 

@@ -1,9 +1,9 @@
-import { REST } from '@discordjs/rest'
-import { RESTPostAPIApplicationCommandsJSONBody, Routes } from 'discord-api-types/v9'
-import Discord from 'discord.js'
+import Discord, { ApplicationCommandData, BaseCommandInteraction, Collection, CommandInteraction } from 'discord.js'
 import fs from 'fs'
+import { DateTime } from 'luxon'
 import path from 'path'
-import { token, guildId, env } from '../config.local.json'
+import { guildId, env } from '../config.local.json'
+import { CustomError } from './CustomErrors'
 
 export interface ButtonInteractionHandler {
   name: string;
@@ -12,11 +12,11 @@ export interface ButtonInteractionHandler {
 }
 
 export interface SlashInteractionHandler {
-  name: string;
-  time: number;
-  data: RESTPostAPIApplicationCommandsJSONBody ;
-  startup(client: Discord.Client): any;
-  execute(interaction: Discord.CommandInteraction): any;
+  name: string
+  time: number
+  data: ApplicationCommandData[]
+  startup(client: Discord.Client): any
+  execute(interaction: Discord.CommandInteraction): any
 }
 
 export interface ContextInteractionHandler {
@@ -27,40 +27,40 @@ export interface ContextInteractionHandler {
   execute(interaction: Discord.CommandInteraction): any;
 }
 
-// const buttonInteractions: Array<ButtonInteractionHandler> = []
 const slashInteractions: Array<SlashInteractionHandler> = []
 const contextInteractions: Array<ContextInteractionHandler> = []
+const buttonInteractions: Array<ButtonInteractionHandler> = []
+
+const contextInteractionsTime: Collection<string, DateTime> = new Collection()
 
 export const InteractionHandler = {
   async GenerateInteractions (client: Discord.Client) {
     try {
-      const commandFiles = fs.readdirSync(path.join(__dirname, '../', 'interactions', 'slashInteractions')).filter(file => file.endsWith('.js'))
-      for (const file of commandFiles) {
-        const command = (await import((path.join(__dirname, '../', 'interactions', 'slashInteractions', file)))) as SlashInteractionHandler
+      for (const file of getSlashInteractionFiles()) {
+        const command = (await import(file)) as SlashInteractionHandler
         slashInteractions.push(command)
       }
 
-      const contextCommandFiles = fs.readdirSync(path.join(__dirname, '../', 'interactions', 'contextInteractions')).filter(file => file.endsWith('.js'))
-      for (const file of contextCommandFiles) {
-        const command = (await import((path.join(__dirname, '../', 'interactions', 'contextInteractions', file)))) as ContextInteractionHandler
+      for (const file of getContextInteractionFiles()) {
+        const command = (await import(file)) as ContextInteractionHandler
         contextInteractions.push(command)
       }
 
-      console.log('Started refreshing application commands.')
-      const rest = new REST({ version: '9' }).setToken(token)
-      const data: object[] = []
-      contextInteractions.forEach(async interaction => {
-        data.push({
-          name: interaction.name,
-          type: interaction.type
-        })
-      })
-      slashInteractions.forEach(async interaction => {
-        data.push(interaction.data)
-      })
+      for (const file of getButtonInteractionFiles()) {
+        const command = (await import(file)) as ButtonInteractionHandler
+        buttonInteractions.push(command)
+      }
 
-      if (env === 'dev') { await rest.put(Routes.applicationGuildCommands(client.application!.id, guildId), { body: data }) }
-      if (env !== 'dev') { await rest.put(Routes.applicationCommands(client.application!.id), { body: [data] }) }
+      let data: ApplicationCommandData[] = []
+      slashInteractions.forEach(element => {
+        data = data.concat(element.data)
+      })
+      if (env === 'dev') {
+        await client.application?.commands.set(data, guildId)
+      }
+      if (env !== 'dev') {
+        await client.application?.commands.set(data)
+      }
 
       console.log('Successfully reloaded application commands.')
     } catch (err) {
@@ -74,5 +74,71 @@ export const InteractionHandler = {
       event.startup(client)
       client.on(event.name, (...args) => (<any>event.execute)(...args))
     }
+  },
+  async ExecuteInteraction (interaction: BaseCommandInteraction) {
+    try {
+      await interaction.deferReply({ ephemeral: true })
+      const interactionName = interaction.commandName
+      if (interaction.isContextMenu()) {
+        const user = interaction.user.id
+        const command = contextInteractions.find(c => c.name === interactionName)
+        if (command) {
+          if (command.time !== -1) {
+            const time = contextInteractionsTime.get(`${interactionName}:${user}`)
+            if (time) {
+              const diff = DateTime.now().diff(time, 'seconds')
+              if (diff.as('seconds') < command.time) {
+                await interaction.editReply({ content: 'You are doing that too fast.' })
+                return
+              } else {
+                contextInteractionsTime.set(`${interactionName}:${user}`, DateTime.now())
+              }
+            }
+            contextInteractionsTime.set(`${interactionName}:${user}`, DateTime.now())
+          }
+          await command.execute(interaction)
+        }
+      }
+
+      if (interaction.isCommand()) {
+        const command = slashInteractions.find(c => c.name === interactionName)
+        if (command) {
+          await command.execute((interaction as CommandInteraction))
+        }
+      }
+    } catch (err) {
+      if (err instanceof CustomError) {
+        await interaction.editReply({ content: err.message })
+      } else {
+        console.error(err)
+        await interaction.editReply({ content: 'A problem occurred.' })
+      }
+    }
   }
+}
+
+function getAllFiles (dirPath: string, arrayOfFiles?: string[]) {
+  const files = fs.readdirSync(dirPath)
+  if (arrayOfFiles === undefined) arrayOfFiles = []
+
+  files.forEach(function (file) {
+    if (fs.statSync(dirPath + '/' + file).isDirectory()) {
+      arrayOfFiles = getAllFiles(dirPath + '/' + file, arrayOfFiles)
+    } else {
+      arrayOfFiles!.push(path.join(dirPath, '/', file))
+    }
+  })
+  return arrayOfFiles
+}
+
+function getSlashInteractionFiles () {
+  return getAllFiles(path.join(__dirname, '../', 'modules')).filter(f => f.endsWith('.slashInteraction.js'))
+}
+
+function getContextInteractionFiles () {
+  return getAllFiles(path.join(__dirname, '../', 'modules')).filter(f => f.endsWith('.contextInteraction.js'))
+}
+
+function getButtonInteractionFiles () {
+  return getAllFiles(path.join(__dirname, '../', 'modules')).filter(f => f.endsWith('.buttonInteraction.js'))
 }
