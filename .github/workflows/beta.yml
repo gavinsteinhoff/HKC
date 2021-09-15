@@ -53,7 +53,7 @@ jobs:
       - name: Start App
         uses: garygrossgarten/github-action-ssh@release
         with:
-          command: pm2 startOrRestart /root/discord_bots/hkc/deploy.json
+          command: pm2 startOrRestart /root/discord_bots/hkc-beta/deploy.json
           host: ${{ secrets.SFTP_HOST }}
           username: root
           password: ${{ secrets.SFTP_KEY }}
