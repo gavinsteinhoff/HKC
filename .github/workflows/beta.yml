@@ -1,11 +1,11 @@
 # This is a basic workflow to help you get started with Actions
 
-name: Main Build
+name: Beta Build
 
 on:
   push:
     branches:
-    - master/*
+    - beta/*
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
@@ -24,7 +24,7 @@ jobs:
           files: './src/config.json'
         env:
           env: prod
-          token: ${{ secrets.DISCORD_KEY }}
+          token: ${{ secrets.BETA_DISCORD_KEY }}
           guildId: 123
           cosmos.cosmosEndpoint: ${{ secrets.COSMOS_ENDPOINT }}
           cosmos.cosmosKey: ${{ secrets.COSMOS_KEY }}
@@ -37,7 +37,7 @@ jobs:
       - name: Start App
         uses: garygrossgarten/github-action-ssh@release
         with:
-          command: mkdir -p /root/discord_bots/hkc
+          command: mkdir -p /root/discord_bots/hkc-beta
           host: ${{ secrets.SFTP_HOST }}
           username: root
           password: ${{ secrets.SFTP_KEY }}
@@ -48,7 +48,7 @@ jobs:
           host: ${{ secrets.SFTP_HOST }}
           password: ${{ secrets.SFTP_KEY }}
           localDir: ./
-          remoteDir: /root/discord_bots/hkc
+          remoteDir: /root/discord_bots/hkc-beta
           
       - name: Start App
         uses: garygrossgarten/github-action-ssh@release
