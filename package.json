@@ -14,6 +14,7 @@
   "dependencies": {
     "@discordjs/opus": "^0.6.0",
     "@discordjs/voice": "^0.6.0",
+    "ffmpeg-static": "^4.4.0",
     "libsodium-wrappers": "^0.7.9",
     "luxon": "^2.0.2",
     "uuid": "^8.3.2",

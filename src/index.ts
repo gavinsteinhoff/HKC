@@ -1,8 +1,8 @@
 import Discord from 'discord.js'
 import { token } from './config.local.json'
 import { InteractionHandler } from './models/InteractionHandlers'
-import { generateDependencyReport } from '@discordjs/voice'
-console.log(generateDependencyReport())
+// import { generateDependencyReport } from '@discordjs/voice'
+// console.log(generateDependencyReport())
 
 const client = new Discord.Client({
   intents: [
