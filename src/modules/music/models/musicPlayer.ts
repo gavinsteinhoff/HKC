@@ -1,5 +1,4 @@
 import { joinVoiceChannel, entersState, VoiceConnectionStatus, AudioPlayerStatus, AudioResource } from '@discordjs/voice'
-import { Snowflake } from 'discord-api-types'
 import { CommandInteraction, GuildMember, Interaction, MessageEmbed } from 'discord.js'
 import { myLib } from '../../myLib'
 import { MusicSubscription } from './subscription'
@@ -25,8 +24,8 @@ interface SendMessageOptions {
 
 export default class MusicPlayer {
     // Maps guild IDs to music subscriptions, which exist if the bot has an active VoiceConnection to the guild.
-    static subscriptions = new Map<Snowflake, MusicSubscription>()
-    guildId: Snowflake
+    static subscriptions = new Map<string, MusicSubscription>()
+    guildId: string
     private _subscription: MusicSubscription | undefined
     public get subscription (): MusicSubscription | undefined {
       return MusicPlayer.subscriptions.get(this.guildId)
@@ -41,7 +40,7 @@ export default class MusicPlayer {
       MusicPlayer.subscriptions.delete(this.guildId)
     }
 
-    constructor (guildId: Snowflake) {
+    constructor (guildId: string) {
       this.guildId = guildId
     }
 

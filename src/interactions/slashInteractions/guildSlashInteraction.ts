@@ -1,4 +1,3 @@
-import { SlashCommandBuilder, SlashCommandSubcommandBuilder, SlashCommandStringOption, SlashCommandSubcommandGroupBuilder, SlashCommandChannelOption } from '@discordjs/builders'
 import Discord, { CommandInteraction, Permissions } from 'discord.js'
 import { CustomError } from '../../models/CustomErrors'
 import CustomGuild from '../../models/CustomGuild'
@@ -7,40 +6,40 @@ import { SlashInteractionHandler } from '../../models/InteractionHandlers'
 // eslint-disable-next-line no-unused-vars
 let client: Discord.Client | undefined
 
-const builder = new SlashCommandBuilder()
-  .setName('guild')
-  .setDescription('Manage your Guild')
+// const builder = new SlashCommandBuilder()
+//   .setName('guild')
+//   .setDescription('Manage your Guild')
 
-builder.addSubcommand((command: SlashCommandSubcommandBuilder) =>
-  command
-    .setName('add')
-    .setDescription('Adds your guild to our services.')
-    .addStringOption((option: SlashCommandStringOption) =>
-      option.setName('timezone').setDescription('Your local timezone, like "America/New_York"').setRequired(true)
-    )
-)
+// builder.addSubcommand((command: SlashCommandSubcommandBuilder) =>
+//   command
+//     .setName('add')
+//     .setDescription('Adds your guild to our services.')
+//     .addStringOption((option: SlashCommandStringOption) =>
+//       option.setName('timezone').setDescription('Your local timezone, like "America/New_York"').setRequired(true)
+//     )
+// )
 
-builder.addSubcommandGroup((command: SlashCommandSubcommandGroupBuilder) =>
-  command
-    .setName('update')
-    .setDescription('Updates your guild with our services.')
-    .addSubcommand((subCommand: SlashCommandSubcommandBuilder) =>
-      subCommand
-        .setName('timezone')
-        .setDescription('Updates the timezone your guild uses.')
-        .addStringOption((option: SlashCommandStringOption) =>
-          option.setName('timezone').setDescription('Your local timezone, like "America/New_York"').setRequired(true)
-        )
-    )
-    .addSubcommand((subCommand: SlashCommandSubcommandBuilder) =>
-      subCommand
-        .setName('logchannel')
-        .setDescription('Updates the mod log channel your guild uses.')
-        .addChannelOption((option: SlashCommandChannelOption) =>
-          option.setName('channel').setDescription('The channel you want mod logs sent to').setRequired(true)
-        )
-    )
-)
+// builder.addSubcommandGroup((command: SlashCommandSubcommandGroupBuilder) =>
+//   command
+//     .setName('update')
+//     .setDescription('Updates your guild with our services.')
+//     .addSubcommand((subCommand: SlashCommandSubcommandBuilder) =>
+//       subCommand
+//         .setName('timezone')
+//         .setDescription('Updates the timezone your guild uses.')
+//         .addStringOption((option: SlashCommandStringOption) =>
+//           option.setName('timezone').setDescription('Your local timezone, like "America/New_York"').setRequired(true)
+//         )
+//     )
+//     .addSubcommand((subCommand: SlashCommandSubcommandBuilder) =>
+//       subCommand
+//         .setName('logchannel')
+//         .setDescription('Updates the mod log channel your guild uses.')
+//         .addChannelOption((option: SlashCommandChannelOption) =>
+//           option.setName('channel').setDescription('The channel you want mod logs sent to').setRequired(true)
+//         )
+//     )
+// )
 
 const guildInteraction: SlashInteractionHandler = {
   name: 'guild',

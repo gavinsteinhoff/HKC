@@ -1,28 +1,6 @@
-import { SlashCommandBuilder, SlashCommandSubcommandBuilder } from '@discordjs/builders'
 import Discord, { CommandInteraction, MessageEmbed, Permissions } from 'discord.js'
 import { CustomError } from '../../models/CustomErrors'
 import { SlashInteractionHandler } from '../../models/InteractionHandlers'
-
-const builder = new SlashCommandBuilder()
-  .setName('help')
-  .setDescription('Provides Help')
-
-builder
-  .addSubcommand((command: SlashCommandSubcommandBuilder) =>
-    command
-      .setName('ping')
-      .setDescription('Provides Ping.')
-  )
-  .addSubcommand((command: SlashCommandSubcommandBuilder) =>
-    command
-      .setName('info')
-      .setDescription('Sends bot info to you.')
-  )
-  .addSubcommand((command: SlashCommandSubcommandBuilder) =>
-    command
-      .setName('post')
-      .setDescription('Post bot info to the chat.')
-  )
 
 const helpInteraction: SlashInteractionHandler = {
   name: 'help',
@@ -51,6 +29,7 @@ const helpInteraction: SlashInteractionHandler = {
     }
   ],
   startup (localClient: Discord.Client) {
+    //
   },
 
   async execute (interaction: CommandInteraction) {

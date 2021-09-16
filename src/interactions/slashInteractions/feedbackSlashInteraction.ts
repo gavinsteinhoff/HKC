@@ -1,4 +1,3 @@
-import { SlashCommandBuilder, SlashCommandSubcommandBuilder, SlashCommandStringOption, SlashCommandUserOption } from '@discordjs/builders'
 import Discord, { CommandInteraction, MessageEmbed, Permissions, TextChannel } from 'discord.js'
 import { CustomError } from '../../models/CustomErrors'
 import CustomGuild from '../../models/CustomGuild'
@@ -8,42 +7,42 @@ import { myLib } from '../../modules/myLib'
 // eslint-disable-next-line no-unused-vars
 let client: Discord.Client | undefined
 
-const builder = new SlashCommandBuilder()
-  .setName('feedback')
-  .setDescription('Send Feedback to the Mods')
-  .addSubcommand((subCommand: SlashCommandSubcommandBuilder) =>
-    subCommand
-      .setName('submit')
-      .setDescription('Send Feedback to the Mods')
-      .addStringOption((option: SlashCommandStringOption) =>
-        option
-          .setName('feedback')
-          .setDescription('Your Feedback.')
-          .setRequired(true)
-      )
-  )
-  .addSubcommand((subCommand: SlashCommandSubcommandBuilder) =>
-    subCommand
-      .setName('block')
-      .setDescription('Restricts a user who is abusing the feedback.')
-      .addUserOption((option: SlashCommandUserOption) =>
-        option
-          .setName('user')
-          .setDescription('The user you want to ban from feedback.')
-          .setRequired(true)
-      )
-  )
-  .addSubcommand((subCommand: SlashCommandSubcommandBuilder) =>
-    subCommand
-      .setName('unblock')
-      .setDescription('Unblocks a user form using feedback.')
-      .addUserOption((option: SlashCommandUserOption) =>
-        option
-          .setName('user')
-          .setDescription('The user you want to unblock from feedback.')
-          .setRequired(true)
-      )
-  )
+// const builder = new SlashCommandBuilder()
+//   .setName('feedback')
+//   .setDescription('Send Feedback to the Mods')
+//   .addSubcommand((subCommand: SlashCommandSubcommandBuilder) =>
+//     subCommand
+//       .setName('submit')
+//       .setDescription('Send Feedback to the Mods')
+//       .addStringOption((option: SlashCommandStringOption) =>
+//         option
+//           .setName('feedback')
+//           .setDescription('Your Feedback.')
+//           .setRequired(true)
+//       )
+//   )
+//   .addSubcommand((subCommand: SlashCommandSubcommandBuilder) =>
+//     subCommand
+//       .setName('block')
+//       .setDescription('Restricts a user who is abusing the feedback.')
+//       .addUserOption((option: SlashCommandUserOption) =>
+//         option
+//           .setName('user')
+//           .setDescription('The user you want to ban from feedback.')
+//           .setRequired(true)
+//       )
+//   )
+//   .addSubcommand((subCommand: SlashCommandSubcommandBuilder) =>
+//     subCommand
+//       .setName('unblock')
+//       .setDescription('Unblocks a user form using feedback.')
+//       .addUserOption((option: SlashCommandUserOption) =>
+//         option
+//           .setName('user')
+//           .setDescription('The user you want to unblock from feedback.')
+//           .setRequired(true)
+//       )
+//   )
 
 const guildInteraction: SlashInteractionHandler = {
   name: 'feedback',

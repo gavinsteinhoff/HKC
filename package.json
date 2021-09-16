@@ -23,13 +23,10 @@
   },
   "devDependencies": {
     "@azure/cosmos": "^3.12.3",
-    "@discordjs/builders": "^0.6.0",
-    "@discordjs/rest": "^0.1.0-canary.0",
     "@types/luxon": "^2.0.2",
     "@types/uuid": "^8.3.1",
     "@typescript-eslint/eslint-plugin": "^4.29.3",
     "@typescript-eslint/parser": "^4.29.3",
-    "discord-api-types": "^0.22.0",
     "discord.js": "^13.1.0-dev.1628770069.d9456a1",
     "eslint": "^7.32.0",
     "eslint-config-standard": "^16.0.3",
