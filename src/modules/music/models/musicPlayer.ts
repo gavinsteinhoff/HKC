@@ -181,6 +181,12 @@ export default class MusicPlayer {
           break
         }
         case MusicPlayerMessageType.Skip: {
+          embeds.push(new MessageEmbed()
+            .setTitle('Song Skipped!')
+            .setTimestamp(Date.now())
+            .addField('Requested by', myLib.getMentionUserString(args.interaction.user))
+          )
+          break
           break
         }
         case MusicPlayerMessageType.Queue: {
