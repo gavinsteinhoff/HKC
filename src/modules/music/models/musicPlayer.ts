@@ -89,7 +89,7 @@ export default class MusicPlayer {
             musicPlayer.SendMessage({ messageType: MusicPlayerMessageType.Play, interaction: interaction, track: track })
           },
           onFinish () {
-            // interaction.editReply({ content: 'Now finished!' }).catch(console.warn)
+            interaction.editReply({ content: 'Now finished!' }).catch(console.warn)
           },
           onError (error) {
             console.warn(error)
